@@ -25,6 +25,10 @@ Runspace         : System.Management.Automation.Runspaces.LocalRunspace
 >>>
 ```
 
+## Installation
+
+run `pip3 install wslpy`
+
 ## Documentation
 
 After installation, you can import the library using `import wslpy`, or import individual class in following way:
