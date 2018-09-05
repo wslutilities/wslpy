@@ -1,16 +1,28 @@
 import re
 import subprocess
 
-def __regExec__(regname):
-    cmd=u"reg.exe query \"HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\\User Shell Folders\" /v \""+regname+u"\" 2>&1"
+def __regList__():
+    cmd=u"reg.exe query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" /s"
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     routput, err = p.communicate()
-    # The following action is trying not to remove the space in the output result
-    output = re.sub(r"\r\nHKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\r\n", '', routput.decode('utf-8'))
-    output = re.sub(regname, '', output, count=1)
-    output = re.sub(r'REG_EXPAND_SZ', '', output)
-    output = re.sub(r'^\s+(.+)\r\n\r\n$', r'\1', output)
+    # Clean output first to toutput
+    toutput = re.sub(r"\r\nHKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\r\n", '', routput.decode('utf-8'))
+    toutput = re.sub(r'(REG_EXPAND_SZ|\r|\n)', '', toutput)
+    # split toutput into list with aoutput
+    aoutput = (re.split(r'\s\s+', toutput))[1:]
+    # convert aoutput to dictionary
+    output = dict(zip(aoutput[::2], aoutput[1::2]))
     return output
+
+def __regExec__(regname):
+    try:
+        regList = __regList__()
+        if regname in regList.keys():
+            return regList[regname]
+        else:
+            raise KeyError("Key does not exist in Registry.")
+    except KeyError as err:
+        print(err)
 
 def __Lin2Win__(path):
     # replace / to \
