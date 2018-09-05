@@ -1,28 +1,37 @@
 import subprocess
+from enum import Enum
 
-def __build__():
-    buildcmd="reg.exe query \"HKLM\Software\Microsoft\Windows NT\CurrentVersion\" /v \"CurrentBuild\" 2>&1"
-    p = subprocess.Popen(buildcmd, shell=True, stdout=subprocess.PIPE)
+def __regInfoFetch__(key):
+    cmd=u"reg.exe query \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\" /v \""+key+u"\" 2>&1"
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     routput, err = p.communicate()
     output = (routput.decode("utf-8").rstrip().split())[-1]
     return output
 
+#: Returns Windows 10 Build number.
+build=__regInfoFetch__("CurrentBuild")
 
-def __branch__():
-    branchcmd="reg.exe query \"HKLM\Software\Microsoft\Windows NT\CurrentVersion\" /v \"BuildBranch\" 2>&1"
-    p = subprocess.Popen(branchcmd, shell=True, stdout=subprocess.PIPE)
-    routput, err = p.communicate()
-    output = (routput.decode("utf-8").rstrip().split())[-1]
-    return output
+#: Returns Windows 10 Branch information.
+branch=__regInfoFetch__("BuildBranch")
 
-def __long_build__():
-    longbuildcmd="reg.exe query \"HKLM\Software\Microsoft\Windows NT\CurrentVersion\" /v \"BuildLabEx\" 2>&1"
-    p = subprocess.Popen(longbuildcmd, shell=True, stdout=subprocess.PIPE)
-    routput, err = p.communicate()
-    output = (routput.decode("utf-8").rstrip().split())[-1]
-    return output
+#: Imports Windows 10 Long Build string.
+long_build=__regInfoFetch__("BuildLabEx")
 
-build=__build__()
-branch=__branch__()
-long_build=__long_build__()
+def CmdExec(command):
+    """
+    Execute cmd commands.
+    
+    :param command: cmd.exe commands.
+    """
+    cmd = u"cmd.exe /c \""+command+u"\""
+    subprocess.call(cmd, shell=True)
+
+def PsExec(command):
+    """
+    Execute PowerShell commands.
+    :param command: powershell.exe commands.
+    """
+    cmd = u"powershell.exe -NoProfile -NonInteractive -Command \""+command+u"\""
+    subprocess.call(cmd, shell=True)
+
 
