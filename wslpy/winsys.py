@@ -1,5 +1,14 @@
 import subprocess
 from enum import Enum
+from pathlib import Path
+
+def __isWSL__():
+    try:
+        Path('/proc/sys/fs/binfmt_misc/WSLInterop').resolve()
+    except FileNotFoundError:
+        return False
+    else:
+        return True
 
 def __regInfoFetch__(key):
     cmd=u"reg.exe query \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\" /v \""+key+u"\" 2>&1"
@@ -14,8 +23,11 @@ build=__regInfoFetch__("CurrentBuild")
 #: Returns Windows 10 Branch information.
 branch=__regInfoFetch__("BuildBranch")
 
-#: Imports Windows 10 Long Build string.
+#: Returns Windows 10 Long Build string.
 long_build=__regInfoFetch__("BuildLabEx")
+
+#: A boolean value to check whether the system is WSL.
+isWSL=__isWSL__()
 
 def CmdExec(command):
     """

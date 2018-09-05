@@ -1,24 +1,13 @@
 # wslpy
 
-This is a Python3 library for WSL specific tasks, and you can use the library to do amazing things:
+This is a Python3 library for WSL specific tasks, and you can use it to do something amazing:
 
 ```python
 >>> from wslpy import winsys
->>> winsys.PsExec('Get-Host')
-
-
-Name             : ConsoleHost
-Version          : 5.1.18219.1000
-InstanceId       : ac0801e1-5d33-459e-b12d-26120c9e202a
-UI               : System.Management.Automation.Internal.Host.InternalHostUserI 
-                   nterface
-CurrentCulture   : en-US
-CurrentUICulture : en-GB
-PrivateData      : Microsoft.PowerShell.ConsoleHost+ConsoleColorProxy
-DebuggerEnabled  : True
-IsRunspacePushed : False
-Runspace         : System.Management.Automation.Runspaces.LocalRunspace
-
+>>> winsys.isWSL
+True
+>>> winsys.CmdExec('ver')
+Microsoft Windows [Version 10.0.18219.1000]
 >>> from wslpy import convert
 >>> convert.to_path('/mnt/c/Windows/')
 'c:\\Windows\\'
@@ -27,7 +16,11 @@ Runspace         : System.Management.Automation.Runspaces.LocalRunspace
 
 ## Installation
 
-run `pip3 install wslpy`
+run `pip3 install wslpy`, or install from source:
+
+```bash
+python3 setup.py install
+```
 
 ## Documentation
 
