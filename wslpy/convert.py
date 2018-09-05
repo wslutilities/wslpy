@@ -1,7 +1,7 @@
 import re
 import subprocess
 
-def __regList__():
+def __regPathList__():
     cmd=u"reg.exe query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" /s"
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     routput, err = p.communicate()
@@ -14,9 +14,9 @@ def __regList__():
     output = dict(zip(aoutput[::2], aoutput[1::2]))
     return output
 
-def __regExec__(regname):
+def __regPathValue__(regname):
     try:
-        regList = __regList__()
+        regList = __regPathList__()
         if regname in regList.keys():
             return regList[regname]
         else:
