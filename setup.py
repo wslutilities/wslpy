@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='wslpy',
-    version='0.0.1',
+    version='0.0.4',
     description='Python Library for WSL specific tasks',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -13,7 +13,6 @@ setup(
     packages=['wslpy'],
     author='callmepk',
     author_email='wotingwu@live.com',
-    install_requires=[],
     keywords=['system','WSL','Windows 10'],
     url='https://github.com/wslutilities/wslpy'
 )
