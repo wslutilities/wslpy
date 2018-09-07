@@ -1,14 +1,5 @@
 import subprocess
 from enum import Enum
-from pathlib import Path
-
-def __isWSL__():
-    try:
-        Path('/proc/sys/fs/binfmt_misc/WSLInterop').resolve()
-    except FileNotFoundError:
-        return False
-    else:
-        return True
 
 def __regInfoFetch__(key):
     cmd=u"reg.exe query \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\" /v \""+key+u"\" 2>&1"
@@ -26,9 +17,6 @@ branch=__regInfoFetch__("BuildBranch")
 #: Returns Windows 10 Long Build string.
 long_build=__regInfoFetch__("BuildLabEx")
 
-#: A boolean value to check whether the system is WSL.
-isWSL=__isWSL__()
-
 def CmdExec(command):
     """
     Execute cmd commands.
@@ -38,12 +26,21 @@ def CmdExec(command):
     cmd = u"cmd.exe /c \""+command+u"\""
     subprocess.call(cmd, shell=True)
 
-def PsExec(command):
+def PwShExec(command):
     """
-    Execute PowerShell commands.
+    Execute PowerShell(5.*) commands.
     :param command: powershell.exe commands.
     """
     cmd = u"powershell.exe -NoProfile -NonInteractive -Command \""+command+u"\""
     subprocess.call(cmd, shell=True)
+
+def PwShExec(command):
+    """
+    Execute PowerShell Core 6 commands.
+    :param command: pwsh.exe commands.
+    """
+    cmd = u"pwsh.exe -NoProfile -NonInteractive -Command \""+command+u"\""
+    subprocess.call(cmd, shell=True)
+
 
 

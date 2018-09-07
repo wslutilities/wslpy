@@ -5,18 +5,17 @@ with open("README.md", "r") as fh:
 
 setup(
     name='wslpy',
-    version='0.0.6',
+    version='0.0.7',
     description='Python Library for WSL specific tasks',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    license='LGPLv3.0',
+    license='LGPLv3',
     packages=['wslpy'],
     author='callmepk',
     author_email='wotingwu@live.com',
     keywords=['system','WSL','Windows 10'],
     url='https://github.com/wslutilities/wslpy',
     classifiers=[
-        "Development Status :: 3 - Alpha",
         "Environment :: Console",
         "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
         "Operating System :: POSIX :: Linux",
