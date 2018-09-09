@@ -34,7 +34,7 @@ def PwShExec(command):
     cmd = u"powershell.exe -NoProfile -NonInteractive -Command \""+command+u"\""
     subprocess.call(cmd, shell=True)
 
-def PwShExec(command):
+def PwShCrExec(command):
     """
     Execute PowerShell Core 6 commands.
     :param command: pwsh.exe commands.
