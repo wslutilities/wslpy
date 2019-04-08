@@ -70,25 +70,31 @@ def to(input, toType=PathConvType.AUTO):
     """
     try:
         if re.match(r'\/mnt\/[A-Za-z]', input) is not None:  # Linux Path
-            if toType == (PathConvType.AUTO or PathConvType.WIN):
+            if toType == PathConvType.AUTO:
+                return __Lin2Win__(input)
+            elif toType == PathConvType.WIN:
                 return __Lin2Win__(input)
             elif toType == PathConvType.LINUX:
                 return input
             elif toType == PathConvType.WINDOUBLE:
                 return __Win2Dwin__(__Lin2Win__(input))
             else:
-                raise ValueError("Invalid Conversion Type "+toType)
+                raise ValueError("ERROR: Invalid Conversion Type "+toType)
         elif re.match(r'[A-Za-z]:\\\\', input) is not None:  # Windows Path /w Double Dashline
-            if toType == (PathConvType.AUTO or PathConvType.LINUX):
+            if toType == PathConvType.AUTO:
+                return __DWin2Lin__(input)
+            elif toType == PathConvType.LINUX:
                 return __DWin2Lin__(input)
             elif toType == PathConvType.WIN:
                 return __Lin2Win__(__DWin2Lin__(input))
             elif toType == PathConvType.WINDOUBLE:
                 return input
             else:
-                raise ValueError("Invalid Conversion Type "+toType)
+                raise ValueError("ERROR: Invalid Conversion Type "+toType)
         elif re.match(r'[A-Za-z]:', input) is not None:  # Windows Path
-            if toType == (PathConvType.AUTO or PathConvType.LINUX):
+            if toType == PathConvType.AUTO:
+                return __DWin2Lin__(__Win2Dwin__(input))
+            elif toType == PathConvType.LINUX:
                 return __DWin2Lin__(__Win2Dwin__(input))
             elif toType == PathConvType.WIN:
                 return input
