@@ -1,5 +1,7 @@
 # wslpy
 
+[![pypi](https://flat.badgen.net/pypi/v/wslpy)](https://pypi.org/project/wslpy/)
+
 This is a Python3 library for WSL specific tasks, and you can use it to do something amazing:
 
 ```python
@@ -36,4 +38,6 @@ wslpy.winsys.PwShCrExec(command)
 
 ## License
 
-LGPL 3.0.
+<img width="150" src="https://www.gnu.org/graphics/gplv3-with-text-136x68.png">
+
+This project uses [GPLv3](LICENSE) License.
