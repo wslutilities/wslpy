@@ -1,5 +1,6 @@
 from pathlib import Path
 
+
 def __isWSL__():
     try:
         Path('/proc/sys/fs/binfmt_misc/WSLInterop').resolve()
@@ -8,5 +9,12 @@ def __isWSL__():
     else:
         return True
 
-#: A boolean value to check whether the system is WSL.
-isWSL=__isWSL__()
+def isWSL():
+    """
+    Check whether the system is WSL.
+
+    Returns
+    -------
+    A boolean value, `True` if it is WSL.
+    """
+    return __isWSL__()
