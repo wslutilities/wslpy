@@ -5,11 +5,11 @@ with open("README.md", "r") as fh:
 
 setup(
     name='wslpy',
-    version='0.0.7',
+    version='0.2.0',
     description='Python Library for WSL specific tasks',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    license='LGPLv3',
+    license='GPLv3',
     packages=['wslpy'],
     author='callmepk',
     author_email='wotingwu@live.com',
@@ -17,7 +17,7 @@ setup(
     url='https://github.com/wslutilities/wslpy',
     classifiers=[
         "Environment :: Console",
-        "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3 :: Only"
     ]
