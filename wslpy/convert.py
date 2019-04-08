@@ -1,19 +1,29 @@
+""" wslpy.convert
+
+This is the class that helps convert between 3 types of path used widely in WSL.
+"""
 import re
 from enum import Enum
 
+
 class PathConvType(Enum):
-    """Types for Path Conversions"""
+    """Types for Path Conversions
 
-    """Automatic Conversion"""
+    `AUTO`
+    Automatic Conversion
+
+    `LINUX`
+    Convert to Linux Path
+
+    `WIN`
+    Convert to Windows Path
+
+    `WINDOUBLE`
+    Convert to Windows Path with Double Dash
+    """
     AUTO = 0
-
-    """Convert to Linux Path"""
     LINUX = 1
-
-    """Convert to Windows Path"""
     WIN = 2
-
-    """Convert to Windows Path with Double Dash"""
     WINDOUBLE = 3
 
 
@@ -36,6 +46,7 @@ def __DWin2Lin__(path):
     # replace <drive_letter>: to \mnt\<drive_letter>
     path = re.sub(r'([A-Za-z]):', r'/mnt/\1', path)
     return path
+
 
 def to(input, toType=PathConvType.AUTO):
     """
@@ -89,3 +100,66 @@ def to(input, toType=PathConvType.AUTO):
             raise ValueError("Invalid Path "+input)
     except ValueError as err:
         print(err)
+
+
+def toWin(input):
+    """
+    Convert path to Windows style.
+
+    Parameters
+    ----------
+    input : str
+        the string of the original path.
+
+    Returns
+    -------
+    string of Windows Style path.
+
+    Raises
+    ------
+    ValueError
+        An error occurred when the input is invalid.
+    """
+    return to(input, PathConvType.WIN)
+
+
+def toWinDouble(input):
+    """
+    Convert path to Windows Path /w Double style.
+
+    Parameters
+    ----------
+    input : str
+        the string of the original path.
+
+    Returns
+    -------
+    string of Windows Path /w Double Style path.
+
+    Raises
+    ------
+    ValueError
+        An error occurred when the input is invalid.
+    """
+    return to(input, PathConvType.WINDOUBLE)
+
+
+def toLinux(input):
+    """
+    Convert path to Linux style.
+
+    Parameters
+    ----------
+    input : str
+        the string of the original path.
+
+    Returns
+    -------
+    string of Linux Style path.
+
+    Raises
+    ------
+    ValueError
+        An error occurred when the input is invalid.
+    """
+    return to(input, PathConvType.LINUX)
