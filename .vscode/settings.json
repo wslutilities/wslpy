@@ -1,3 +1,7 @@
 {
-    "python.pythonPath": "/usr/bin/python3"
+    "python.pythonPath": "C:\\Linux\\files\\wslpython\\wsl\\python3.exe",
+    "python.linting.pylintPath": "C:\\Linux\\files\\wslpython\\wsl\\pylint.exe",
+    "python.workspaceSymbols.ctagsPath": "C:\\Linux\\files\\wslpython\\wsl\\ctags.exe",
+    "python.formatting.autopep8Path": "C:\\Linux\\files\\wslpython\\wsl\\autopep8.exe"
+    
 }
