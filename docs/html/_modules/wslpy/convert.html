@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>wslpy.convert &#8212; wslpy  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for wslpy.convert</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; wslpy.convert</span>
+
+<span class="sd">This is the class that helps convert between 3 types of path used widely in WSL.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
+
+
+<div class="viewcode-block" id="PathConvType"><a class="viewcode-back" href="../../wslpy.html#wslpy.convert.PathConvType">[docs]</a><span class="k">class</span> <span class="nc">PathConvType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Types for Path Conversions</span>
+
+<span class="sd">    `AUTO`</span>
+<span class="sd">    Automatic Conversion</span>
+
+<span class="sd">    `LINUX`</span>
+<span class="sd">    Convert to Linux Path</span>
+
+<span class="sd">    `WIN`</span>
+<span class="sd">    Convert to Windows Path</span>
+
+<span class="sd">    `WINDOUBLE`</span>
+<span class="sd">    Convert to Windows Path with Double Dash</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">AUTO</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">LINUX</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">WIN</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">WINDOUBLE</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+
+<span class="k">def</span> <span class="nf">__Lin2Win__</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="c1"># replace / to \</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="c1"># replace \mnt\&lt;drive_letter&gt; to &lt;drive_letter&gt;:</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">mnt</span><span class="se">\\</span><span class="s1">([A-Za-z])&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1:&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span>
+
+
+<span class="k">def</span> <span class="nf">__Win2Dwin__</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="c1"># replace \ to \\</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;</span><span class="se">\\\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">__DWin2Lin__</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="c1"># replace \\ to /</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;</span><span class="se">\\\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="c1"># replace &lt;drive_letter&gt;: to \mnt\&lt;drive_letter&gt;</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([A-Za-z]):&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;/mnt/\1&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">path</span>
+
+
+<div class="viewcode-block" id="to"><a class="viewcode-back" href="../../wslpy.html#wslpy.convert.to">[docs]</a><span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">toType</span><span class="o">=</span><span class="n">PathConvType</span><span class="o">.</span><span class="n">AUTO</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert between 3 types of path used widely in WSL.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input : str</span>
+<span class="sd">        the string of the original path.</span>
+<span class="sd">    toType : PathConvType</span>
+<span class="sd">        the type user wants to convert to. Default is PathConvType.AUTO.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    string of converted path.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        An error occurred when the input is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\/mnt\/[A-Za-z]&#39;</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Linux Path</span>
+            <span class="k">if</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">AUTO</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">__Lin2Win__</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">WIN</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">__Lin2Win__</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">LINUX</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">input</span>
+            <span class="k">elif</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">WINDOUBLE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">__Win2Dwin__</span><span class="p">(</span><span class="n">__Lin2Win__</span><span class="p">(</span><span class="nb">input</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: Invalid Conversion Type &quot;</span><span class="o">+</span><span class="n">toType</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[A-Za-z]:</span><span class="se">\\\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Windows Path /w Double Dashline</span>
+            <span class="k">if</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">AUTO</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">__DWin2Lin__</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">LINUX</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">__DWin2Lin__</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">WIN</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">__Lin2Win__</span><span class="p">(</span><span class="n">__DWin2Lin__</span><span class="p">(</span><span class="nb">input</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">WINDOUBLE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">input</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;ERROR: Invalid Conversion Type &quot;</span><span class="o">+</span><span class="n">toType</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[A-Za-z]:&#39;</span><span class="p">,</span> <span class="nb">input</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Windows Path</span>
+            <span class="k">if</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">AUTO</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">__DWin2Lin__</span><span class="p">(</span><span class="n">__Win2Dwin__</span><span class="p">(</span><span class="nb">input</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">LINUX</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">__DWin2Lin__</span><span class="p">(</span><span class="n">__Win2Dwin__</span><span class="p">(</span><span class="nb">input</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">WIN</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">input</span>
+            <span class="k">elif</span> <span class="n">toType</span> <span class="o">==</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">WINDOUBLE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">__Win2Dwin__</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid Conversion Type &quot;</span><span class="o">+</span><span class="n">toType</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid Path &quot;</span><span class="o">+</span><span class="nb">input</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="toWin"><a class="viewcode-back" href="../../wslpy.html#wslpy.convert.toWin">[docs]</a><span class="k">def</span> <span class="nf">toWin</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert path to Windows style.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input : str</span>
+<span class="sd">        the string of the original path.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    string of Windows Style path.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        An error occurred when the input is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">to</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">WIN</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="toWinDouble"><a class="viewcode-back" href="../../wslpy.html#wslpy.convert.toWinDouble">[docs]</a><span class="k">def</span> <span class="nf">toWinDouble</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert path to Windows Path /w Double style.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input : str</span>
+<span class="sd">        the string of the original path.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    string of Windows Path /w Double Style path.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        An error occurred when the input is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">to</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">WINDOUBLE</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="toLinux"><a class="viewcode-back" href="../../wslpy.html#wslpy.convert.toLinux">[docs]</a><span class="k">def</span> <span class="nf">toLinux</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert path to Linux style.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input : str</span>
+<span class="sd">        the string of the original path.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    string of Linux Style path.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        An error occurred when the input is invalid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">to</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">PathConvType</span><span class="o">.</span><span class="n">LINUX</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">wslpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../wslpy.html">wslpy package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../wslpy.html">wslpy</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Patrick Wu.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
