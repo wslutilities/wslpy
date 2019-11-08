@@ -2,6 +2,8 @@
 
 [![pypi](https://flat.badgen.net/pypi/v/wslpy)](https://pypi.org/project/wslpy/)
 
+> `wslpy` is far from complete. the API will change frequently.
+
 This is a Python3 library for WSL specific tasks, and you can use it to do something amazing:
 
 ```python
