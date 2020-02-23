@@ -4,7 +4,7 @@ This is the execution class to execute commands from dirfferent windows executab
 """
 import subprocess
 
-def CmdExec(command):
+def cmdPmt(command):
     """
     Execute cmd command.
 
@@ -17,7 +17,7 @@ def CmdExec(command):
     subprocess.call(cmd, shell=True)
 
 
-def PwShExec(command):
+def powShl(command):
     """
     Execute PowerShell(5.*) command.
 
@@ -30,7 +30,7 @@ def PwShExec(command):
     subprocess.call(cmd, shell=True)
 
 
-def PwShCrExec(command):
+def powShlCor(command):
     """
     Execute PowerShell Core command.
 
