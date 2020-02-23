@@ -8,11 +8,11 @@ This is a Python3 library for WSL specific tasks, and you can use it to do somet
 
 ```python
 >>> import wslpy as wp
->>> wp.isWSL
+>>> wp.isWSL()
 True
->>> wp.winsys.CmdExec('ver')
+>>> wp.exec.cmdPmt('ver')
 Microsoft Windows [Version 10.0.18219.1000]
->>> wp.convert.to_path('/mnt/c/Windows/')
+>>> wp.convert.to('/mnt/c/Windows/')
 'c:\\Windows\\'
 >>>
 ```
@@ -23,19 +23,21 @@ you can install from pypi using `pip install wslpy`, or install from source usin
 
 ## Documentation
 
+> `wslpy` is far from complete. this documentation page will change frequently.
+
 `wslpy` is a small library, it consist following functions and constants:
 
 ```python
-wslpy.isWSL
-wslpy.convert.reg_list()
-wslpy.convert.from_reg(input)
-wslpy.convert.to_path(input, toType = PathConvType.AUTO)
-wslpy.winsys.build
-wslpy.winsys.branch
-wslpy.winsys.long_build
-wslpy.winsys.CmdExec(command)
-wslpy.winsys.PwShExec(command)
-wslpy.winsys.PwShCrExec(command)
+wslpy.isWSL()
+wslpy.system.shellEnvVarList()
+wslpy.system.registry(input)
+wslpy.convert.to(input, toType=PathConvType.AUTO)
+wslpy.convert.toWin(input) 
+wslpy.convert.toWinDouble(input)
+wslpy.convert.toWSL(input) 
+wslpy.exec.cmdPmt(command)
+wslpy.exec.powShl(command)
+wslpy.exec.powShlCor(command)
 ```
 
 ## License
