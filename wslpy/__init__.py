@@ -1,4 +1,7 @@
 import os.path
+import wslpy.convert
+import wslpy.exec
+import wslpy.system
 
 def isWSL():
     """
