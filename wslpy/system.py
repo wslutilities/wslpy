@@ -45,9 +45,9 @@ def __envInfoFetch__(key):
     return output
 
 
-def reg_list():
+def shellEnvVarList():
     """
-    List avaiable Registry keys to use and its corresponding path.
+    List avaiable shell environment variables to use and its corresponding path.
 
     Returns
     -------
@@ -56,7 +56,7 @@ def reg_list():
     return __regPathList__()
 
 
-def from_reg(input):
+def registry(input):
     """
     Generate a path from a Registry Path Key.
 
