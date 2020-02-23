@@ -150,7 +150,7 @@ def toWinDouble(input):
     return to(input, PathConvType.WINDOUBLE)
 
 
-def toLinux(input):
+def toWSL(input):
     """
     Convert path to Linux style.
 
