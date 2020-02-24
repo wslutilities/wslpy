@@ -10,7 +10,7 @@ This is a Python3 library for WSL specific tasks, and you can use it to do somet
 >>> import wslpy as wp
 >>> wp.isWSL()
 True
->>> wp.exec.cmdPmt('ver')
+>>> wp.exec.cmd('ver')
 Microsoft Windows [Version 10.0.18219.1000]
 >>> wp.convert.to('/mnt/c/Windows/')
 'c:\\Windows\\'
@@ -35,9 +35,9 @@ wslpy.convert.to(input, toType=PathConvType.AUTO)
 wslpy.convert.toWin(input) 
 wslpy.convert.toWinDouble(input)
 wslpy.convert.toWSL(input) 
-wslpy.exec.cmdPmt(command)
-wslpy.exec.powShl(command)
-wslpy.exec.powShlCor(command)
+wslpy.exec.cmd(command)
+wslpy.exec.pwSh(command)
+wslpy.exec.pwShCr(command)
 ```
 
 ## License
