@@ -19,6 +19,7 @@ def __regPathList__():
     toutput = re.sub(
         r"\r\nHKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\r\n", '', routput.decode('utf-8'))
     toutput = re.sub(r'(REG_EXPAND_SZ|\r|\n)', '', toutput)
+    toutput = re.sub(r'(REG_SZ|\r|\n)', '', toutput)
     # split toutput into list with aoutput
     aoutput = (re.split(r'\s\s+', toutput))[1:]
     # convert aoutput to dictionary
