@@ -3,15 +3,7 @@ import subprocess
 from enum import Enum
 
 
-def __regInfoFetch__(key):
-    cmd = u"reg.exe query \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\" /v \""+key+u"\" 2>&1"
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-    routput, err = p.communicate()
-    output = (routput.decode("utf-8").rstrip().split())[-1]
-    return output
-
-
-def __regPathList__():
+def __shellEnvVarList__():
     cmd = u"reg.exe query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\" /s"
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     routput, err = p.communicate()
@@ -27,16 +19,23 @@ def __regPathList__():
     return output
 
 
-def __regPathValue__(regname):
+def __shellEnvVar__(regname):
     try:
-        regList = __regPathList__()
-        if regname in regList.keys():
-            return regList[regname]
+        shlList = __shellEnvVarList__()
+        if regname in shlList.keys():
+            return shlList[regname]
         else:
-            raise KeyError("Key does not exist in Registry.")
+            raise KeyError("Key does not exist.")
     except KeyError as err:
         print(err)
 
+
+def __regInfoFetch__(input, key):
+    cmd = u"reg.exe query \""+input+"\" /v \""+key+u"\" 2>&1"
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    routput, err = p.communicate()
+    output = (routput.decode("utf-8").rstrip().split())[-1]
+    return output
 
 def __envInfoFetch__(key):
     cmd = u"powershell.exe query \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\" /v \""+key+u"\" 2>&1"
@@ -54,25 +53,29 @@ def shellEnvVarList():
     -------
     A Dictionary of registry keys and its corresbonding values.
     """
-    return __regPathList__()
+    return __shellEnvVarList__()
 
 
-def registry(input):
+def shellEnvVar(input):
     """
-    Generate a path from a Registry Path Key.
+    Get the value from shell environment variable.
 
     Parameters
     ----------
     input : str
-        string of a registry Path Key.
+        string of a shell environment variable key.
 
     Returns
     -------
-    A string of the corresbonding path from the input.
+    A string of the corresbonding value from the input.
 
     Raises
     ------
     KeyError
         An error occured when you input a empty value or the registry key cannot be found in registry.
     """
-    return __regPathValue__(input)
+    return __shellEnvVar__(input)
+
+
+def registry(input, key):
+    raise NotImplementedError
