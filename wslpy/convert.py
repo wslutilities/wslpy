@@ -68,7 +68,7 @@ def to(input, toType=PathConvType.AUTO):
     ValueError
         An error occurred when the input is invalid.
     """
-    try:
+    if True:
         if re.match(r'\/mnt\/[A-Za-z]', input) is not None:  # Linux Path
             if toType == PathConvType.AUTO:
                 return __Lin2Win__(input)
@@ -104,8 +104,6 @@ def to(input, toType=PathConvType.AUTO):
                 raise ValueError("Invalid Conversion Type "+toType)
         else:
             raise ValueError("Invalid Path "+input)
-    except ValueError as err:
-        print(err)
 
 
 def toWin(input):
