@@ -30,12 +30,25 @@ def __shellEnvVar__(regname):
         print(err)
 
 
+def _regEnvVarList_():
+    cmd = u"powershell.exe \"Get-ChildItem env:\""
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    routput, err = p.communicate()
+    toutput = re.sub(r'(Name|Value|----|-|-----|\r|\n)',
+                     '', routput.decode('utf-8'))
+    aoutput = (re.split(r'\s\s+', toutput))[1:]
+    # convert aoutput to dictionary
+    output = dict(zip(aoutput[::2], aoutput[1::2]))
+    return output
+
+
 def __regInfoFetch__(input, key):
     cmd = u"reg.exe query \""+input+"\" /v \""+key+u"\" 2>&1"
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     routput, err = p.communicate()
     output = (routput.decode("utf-8").rstrip().split())[-1]
     return output
+
 
 def __envInfoFetch__(key):
     cmd = u"powershell.exe query \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\" /v \""+key+u"\" 2>&1"
@@ -75,6 +88,17 @@ def shellEnvVar(input):
         An error occured when you input a empty value or the registry key cannot be found in registry.
     """
     return __shellEnvVar__(input)
+
+
+def RegEnvVarList():
+    """
+    List avaiable registry environment variables to use and its corresponding path.
+
+    Returns
+    -------
+    A Dictionary of registry keys and its corresbonding values.
+    """
+    return _regEnvVarList_()
 
 
 def registry(input, key):
