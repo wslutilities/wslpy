@@ -30,7 +30,7 @@ def __shellEnvVar__(regname):
         print(err)
 
 
-def _regEnvVarList_():
+def __sysEnvVarList__():
     cmd = u"powershell.exe \"Get-ChildItem env:\""
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     routput, err = p.communicate()
@@ -90,15 +90,15 @@ def shellEnvVar(input):
     return __shellEnvVar__(input)
 
 
-def RegEnvVarList():
+def sysEnvVarList():
     """
-    List avaiable registry environment variables to use and its corresponding path.
+    List avaiable system environment variables to use and its corresponding path.
 
     Returns
     -------
-    A Dictionary of registry keys and its corresbonding values.
+    A Dictionary of system environement variables keys and its corresbonding values.
     """
-    return _regEnvVarList_()
+    return _sysEnvVarList_()
 
 
 def registry(input, key):
