@@ -37,8 +37,9 @@ def __regInfoFetch__(input, key):
     output = (routput.decode("utf-8").rstrip().split())[-1]
     return output
 
+
 def __envInfoFetch__(key):
-    cmd = u"powershell.exe query \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\" /v \""+key+u"\" 2>&1"
+    cmd = u"reg.exe query \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\" /v \""+key+u"\" 2>&1"
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     routput, err = p.communicate()
     output = (routput.decode("utf-8").rstrip().split())[-1]
