@@ -31,11 +31,44 @@ def __shellEnvVar__(regname):
 
 
 def __regInfoFetch__(input, key):
+    # INTERNAL FUNCTION
+    #
+    # Note: We would normally expect err to propagate the result if there is one like so 
+    # q = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    # aoutput,erra = q.communicate()
+    # print(erra)
+    #
+    # However Python does not seem to yet be capable to capture this error, thus the workaround you'll see
+    #
+    # Parameters
+    # ----------
+    # input : str
+    #     string of a shell environment variable key.
+    #   
+    #
+    # key : str 
+    #     the name of the registry's key in string
+    #
+    #
+    # Returns
+    # -------
+    # The corresponding result, pre-formatted depending on type
+    #
+    # Raises
+    # ------
+    # Returns the error from Reg.exe in string
+
     cmd = u"reg.exe query \""+input+"\" /v \""+key+u"\" 2>&1"
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     routput, err = p.communicate()
-    output = (routput.decode("utf-8").rstrip().split())[-1]
-    return output
+    
+
+    #A WORKAROUND TILL AN UPSTREAM FIX IS MADE
+    if routput[0:9] == b'\r\n\r\nERROR': #Expected: ERROR: The system was unable to find the specified registry key or value.
+        return routput.decode("utf-8","unicode_escape") #TODO: CHECK IF OTHER ERRORS APPEAR IN TEST SUITE
+    else:
+        return routput.decode("utf-8","unicode_escape").rstrip().split() #This is an array that contains this ['HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session', 'Manager\\Environment', 'OS', 'REG_SZ', 'Windows_NT']
+
 
 def __envInfoFetch__(key):
     cmd = u"powershell.exe query \"HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\" /v \""+key+u"\" 2>&1"
@@ -63,7 +96,7 @@ def shellEnvVar(input):
     Parameters
     ----------
     input : str
-        string of a shell environment variable's location.
+        string of a shell environment variable key.
 
     Returns
     -------
@@ -77,68 +110,56 @@ def shellEnvVar(input):
     return __shellEnvVar__(input)
 
 
-def registry(input, key):
-
-    #DUMMY CODE BEGINS (i am only using this to illustrate something)
-    cmd = u"reg.exe query \""+input+"\" /v \""+key+u"\" 2>&1"
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-    routput, err = p.communicate()
-    #DUMMY CODE ENDS 
-
-    # Given a valid registry path, retrieves the value of an entry in the registry.
+def registry(input, key,show_type=False):
+    # Given a valid registry path, retrieves the value of an entry in the registry, and type if requested.
     # Eg: registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","OS") returns "WINDOWS_NT"
     #
-    # MAY return string type TODO: Doees this make sense?
     #
-    # A valid registry path typically includes (this this and this)
+    # A valid registry path typically looks like:
+    #     "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" (for system)
+    #     "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" (for shell)
+    #     (Although any valid entries should work too) 
+    #
     #
     # Parameters
     # ----------
     # input : str
     #     string of a shell environment variable key.
     #   
-    #     Currently expected values: 
-    #     "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" (for system)
-    #     "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" (for shell)
-    #     (Although any valid entries should work too) TODO: Check if required
     #
     # key : str 
     #     the name of the registry's key in string
     #
+    # show_type : bool
+    #       if show_type = True, registry() will also return the type of variable used. show_type is False otherwise
+    #       and by default
+    #
     # Returns
     # -------
-    # The corresponding value TODO: Possibly type
+    # The corresponding value as a string, an array in the form [value,type] otherwise
     #
     # Raises
     # ------
-    # Returns the error from Reg.exe (Possibly? )
+    # Returns the error from Reg.exe 
 
-    try:
-        query = __regInfoFetch__(input, key)
-        
-        if query != "value.": #Error after regex #TODO: Check with Patrick on how he wants to handle this
-            return query #Expected one
-        else:
-            raise KeyError("The following error propogated from Registry:" + routput.decode("utf-8").rstrip()) #TODO: 
+    query = __regInfoFetch__(input, key)
     
-    except KeyError as err:
-        print(err)
+    if type(query) == list: 
+        if show_type:
+            return [query[4],query[3]]
+        else:
+            return query[4] #Expected one
+    else:
+        raise RuntimeError("The following error propogated from Registry: " + query) 
+
+
  
 #### Test Cases
 #VALID 
-# registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","OS")
+#registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","OS")
+#print(registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","OS",show_type=True))
+#print(registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","OS"))
 
 #INVALID
-registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","dasad")
-
-#### Notes
-# WILL BE DELETED
-
-"""
-for the current stage, it is expected to implement the feature provided by wslvar in wslu: https://github.com/wslutilities/wslu/blob/master/src/wslvar.sh
-
-implement registry(input, key):
-This function expect a registry path as input and the key item as key. The output should be its value; The optimal goal will be returning both the key
-    type(Is it a string, a hex value, or something else?) and the key value in the proper format. This is currently being built with __regInfoFetch__(input, key)
-
-"""
+#print(registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","dasad"))
+#__regInfoFetch__("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","dasad")
