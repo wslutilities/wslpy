@@ -42,6 +42,17 @@ def __sysEnvVarList__():
     return output
 
 
+def __sysEnvVar__(varName):
+    try:
+        sysVarList = __sysEnvVarList__()
+        if varName in sysVarList.keys():
+            return sysVarList[varName]
+        else:
+            raise KeyError("Key does not exist.")
+    except KeyError as err:
+        print(err)
+
+
 def __regInfoFetch__(input, key):
     cmd = u"reg.exe query \""+input+"\" /v \""+key+u"\" 2>&1"
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
@@ -98,7 +109,7 @@ def sysEnvVarList():
     -------
     A Dictionary of system environement variables keys and its corresbonding values.
     """
-    return _sysEnvVarList_()
+    return __sysEnvVarList__()
 
 
 def registry(input, key):
@@ -121,3 +132,24 @@ def registry(input, key):
     else:
         keyType = 'null'
     return {keyType, keyValue}
+
+
+def sysEnvVar(input):
+    """
+    Get the value from shell environment variable.
+
+    Parameters
+    ----------
+    input : str
+        string of a shell environment variable key.
+
+    Returns
+    -------
+    A string of the corresbonding value from the input.
+
+    Raises
+    ------
+    KeyError
+        An error occured when you input a empty value or the registry key cannot be found in registry.
+    """
+    return __sysEnvVar__(input)
