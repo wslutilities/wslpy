@@ -102,4 +102,22 @@ def sysEnvVarList():
 
 
 def registry(input, key):
-    raise NotImplementedError
+    """
+    Get any value from registry provided the correct path.
+
+    Returns
+    -------
+    A tuple of value type 'String','Int','Binary','HEX'or'null' and value of the queried registry.
+    """
+    keyValue = __regInfoFetch__(input, key)
+    if re.match('0x', keyValue):
+        keyType = 'HEX'
+    elif re.match(r'^[10]*$', keyValue):
+        keyType = 'Binary'
+    elif re.match(r'^[A-Za-z0-9_\-\\: .;()]*$', keyValue):
+        keyType = 'String'
+    elif re.match(r'^[0-9]*$', keyValue):
+        keyType = 'Int'
+    else:
+        keyType = 'null'
+    return {keyType, keyValue}
