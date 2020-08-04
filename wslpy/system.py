@@ -146,43 +146,36 @@ def sysEnvVarList():
 
 
 def registry(input, key, show_type=False):
-    # Given a valid registry path, retrieves the value of an entry in the registry, and type if requested.
-    # Eg: registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","OS") returns "WINDOWS_NT"
-    #
-    #
-    # A valid registry path typically looks like:
-    #     "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" (for system)
-    #     "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" (for shell)
-    #     (Although any valid entries should work too) 
-    #
-    #
-    # Parameters
-    # ----------
-    # input : str
-    #     string of a shell environment variable key.
-    #   
-    #
-    # key : str 
-    #     the name of the registry's key in string
-    #
-    # show_type : bool
-    #       if show_type = True, registry() will also return the type of variable used. show_type is False otherwise
-    #       and by default
-    #
-    # Returns
-    # -------
-    # The corresponding value as a string, an array in the form [value,type] otherwise
-    #
-    # Raises
-    # ------
-    # Returns the error from Reg.exe 
     """
-    Get any value from registry provided the correct path.
+    Given a valid registry path, retrieves the value of an entry in the registry, and type if requested.
+    Eg: registry("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment","OS") returns "WINDOWS_NT"
+
+    A valid registry path typically looks like:
+        "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment" (for system)
+        "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders" (for shell)
+        (Although any valid entries should work too)
+
+    Parameters
+    ----------
+    input : str
+        string of a shell environment variable key.
+    
+    key : str 
+        the name of the registry's key in string
+
+    show_type : bool
+        if show_type = True, registry() will also return the type of variable used. show_type is False otherwise
+        and by default
 
     Returns
     -------
-    A tuple of value type 'String','Int','Binary','HEX'or'null' and value of the queried registry.
+    The corresponding value as a string, an array in the form [value,type] otherwise
+
+    Raises
+    ------
+    Returns the error from Reg.exe 
     """
+
     query = __regInfoFetch__(input, key)
     
     if type(query) == list: 
