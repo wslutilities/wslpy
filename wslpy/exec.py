@@ -11,7 +11,7 @@ import sys
 def __isInteropEnabled__():
     cat_wslInterop = subprocess.getoutput(
         "cat /proc/sys/fs/binfmt_misc/WSLInterop | grep '.*abled'")
-    return cat_wslInterop
+    return cat_wslInterop == 'enabled'
 
 
 def isInteropEnabled():
@@ -22,7 +22,7 @@ def isInteropEnabled():
     _______
     A boolean value, `True` if interoperablility is enabled.
     """
-    return __isInteropEnabled__() == 'enabled'
+    return __isInteropEnabled__()
 
 
 def preCheck():
