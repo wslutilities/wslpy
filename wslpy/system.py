@@ -56,7 +56,7 @@ def __sysEnvVar__(varName):
 def __regInfoFetch__(input, key):
     # INTERNAL FUNCTION
     #
-    # Note: We would normally expect err to propagate the result if there is one like so 
+    # Note: We would normally expect err to propagate the result if there is one like so
     # q = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     # aoutput,erra = q.communicate()
     # print(erra)
@@ -67,9 +67,9 @@ def __regInfoFetch__(input, key):
     # ----------
     # input : str
     #     string of a shell environment variable key.
-    #   
     #
-    # key : str 
+    #
+    # key : str
     #     the name of the registry's key in string
     #
     #
@@ -84,14 +84,15 @@ def __regInfoFetch__(input, key):
     cmd = u"reg.exe query \""+input+"\" /v \""+key+u"\" 2>&1"
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     routput, err = p.communicate()
-    
 
-    #A WORKAROUND TILL AN UPSTREAM FIX IS MADE
-    if routput[0:9] == b'\r\n\r\nERROR': #Expected: ERROR: The system was unable to find the specified registry key or value.
-        return routput.decode("utf-8","unicode_escape") #TODO: CHECK IF OTHER ERRORS APPEAR IN TEST SUITE
+    # A WORKAROUND TILL AN UPSTREAM FIX IS MADE
+    # Expected: ERROR: The system was unable to find the specified registry key or value.
+    if routput[0:9] == b'\r\n\r\nERROR':
+        # TODO: CHECK IF OTHER ERRORS APPEAR IN TEST SUITE
+        return routput.decode("utf-8", "unicode_escape")
     else:
-        return routput.decode("utf-8","unicode_escape").rstrip().split() #This is an array that contains this ['HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session', 'Manager\\Environment', 'OS', 'REG_SZ', 'Windows_NT']
-
+        # This is an array that contains this ['HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session', 'Manager\\Environment', 'OS', 'REG_SZ', 'Windows_NT']
+        return routput.decode("utf-8", "unicode_escape").rstrip().split()
 
 
 def __envInfoFetch__(key):
@@ -159,7 +160,7 @@ def registry(input, key, show_type=False):
     ----------
     input : str
         string of a shell environment variable key.
-    
+
     key : str 
         the name of the registry's key in string
 
@@ -177,23 +178,23 @@ def registry(input, key, show_type=False):
     """
 
     query = __regInfoFetch__(input, key)
-    
-    if type(query) == list: 
+
+    if type(query) == list:
         if show_type:
-            return [query[4],query[3]]
+            return [query[4], query[3]]
         else:
-            return query[4] #Expected one
+            return query[4]  # Expected one
     else:
-        raise RuntimeError("The following error propogated from Registry: " + query) 
+        raise RuntimeError(
+            "The following error propogated from Registry: " + query)
 
-
-    #### Test Cases
-    #VALID 
+    # Test Cases
+    # VALID
     #registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","OS")
     #print(registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","OS",show_type=True))
     #print(registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","OS"))
 
-    #INVALID
+    # INVALID
     #print(registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","dasad"))
     #__regInfoFetch__("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment","dasad")
 
@@ -217,3 +218,50 @@ def sysEnvVar(input):
         An error occured when you input a empty value or the registry key cannot be found in registry.
     """
     return __sysEnvVar__(input)
+
+
+def detectDistro():
+    """
+    Reads the /etc/os-release file nad tries to infer
+    the the OS form available attributes.
+    Returns
+    _______
+    Name of distribution. 
+    """
+    file = '/etc/os-release'
+    distro = __read_attribute__(file, 'NAME=')
+    if distro == 'Arch':
+        return 'archlinux'
+    elif distro == 'Scientific':
+        return 'scilinux'
+    elif distro == 'Fedora Remix for WSL':
+        return 'fedoraremix'
+    elif distro == 'Generic':
+        os_id = __read_attribute__(file, 'ID_LIKE=')
+        if os_id == 'fedora':
+            return 'oldfedora'
+        else:
+            return 'unknown'
+
+    return distro.lower()
+
+
+def __read_attribute__(file, attr):
+    """
+    INTERNAL FUNCTION
+    Tries to find value after the given attribute.
+    Returns
+    _______
+    Value of the given attr if found
+    Else raises Exception('No such attribute found').
+    """
+    with open(file, mode='r') as f:
+        lines = f.readlines()
+    for line in lines:
+        if line.find(attr) != -1:
+            line = line.strip()  # Strip whitespaces
+            line = line.replace(attr, "")
+            line = line.strip('\"')  # strip ".."
+            return line
+            break
+    raise Exception('No such attribute found')
