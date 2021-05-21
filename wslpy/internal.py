@@ -1,6 +1,7 @@
 """ wslpy.internal
 
-This is the class that helps working with wslu.
+This is the class that helps with wslu;
+it is okay to use with other programs but it is not warranted
 """
 import gi
 gi.require_version('Gtk', '3.0')
@@ -23,4 +24,4 @@ def __findIcon__(icon_name):
         icon = icon_theme.lookup_icon(icon_name, res, 0)
         if icon:
             found_icon = icon.get_filename()
-    return found_icon if found_icon != "" else ""
+    return found_icon if found_icon else ""
