@@ -1,4 +1,38 @@
+from os import getcwd
 import subprocess
+
+
+def __exec_command__(cmd, *, working_dir=None):
+    """
+    Execute a command in the shell and return the output.
+
+    Parameters
+    ----------
+    cmd : str
+        The command to be executed
+
+    Returns
+    -------
+    The output of the command as a string
+
+    Raises
+    ------
+    Returns the error from the command
+    """
+    if working_dir is None:
+        working_dir = getcwd()
+    try:
+        cp = subprocess.run(cmd, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            cwd=working_dir)
+        if isinstance(cp.stdout, bytes):
+            cp.stdout = cp.stdout.decode('utf-8')
+        if isinstance(cp.stderr, bytes):
+            cp.stderr = cp.stderr.decode('utf-8')
+    except subprocess.CalledProcessError as e:
+        raise Exception("command exec failed: ", e.stderr)
+    else:
+        return cp
 
 
 def registry(input, key, show_type=False):
