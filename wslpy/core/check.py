@@ -1,4 +1,4 @@
-from os import path
+from os import path, listdir
 
 
 def is_wsl():
@@ -74,3 +74,45 @@ def detect_distro():
             return 'unknown'
 
     return distro.lower()
+
+
+def get_mount_prefix():
+    """
+    This function returns the prefix for the current windows mount locaution,
+    aka the Interop Prefix.
+
+    Returns
+    -------
+    The interop prefix. default is ``/mnt/``.
+    """
+    from configparser import ConfigParser
+
+    win_location = '/mnt/'
+    if path.exists('/etc/wsl.conf'):
+        config = ConfigParser()
+        config.read('/etc/wsl.conf')
+        if config.has_option('automount', 'root'):
+            win_location = config.get('automount', 'root')
+
+    return win_location
+
+
+def get_sys_drive_prefix():
+    """
+    This function returns the prefix for the current windows mount locaution,
+    aka the Sys Drive Prefix.
+
+    Returns
+    -------
+    The sys drive prefix. default is ``/mnt/c``.
+    """
+    ip = get_mount_prefix()
+    sys_drive = 'c'
+    drive_list = listdir(ip)
+    drive_list = [a for a in drive_list if len(a) == 1]
+    for drive in drive_list:
+        sys32_path = path.join(ip, drive, 'Windows', 'System32')
+        if path.exists(sys32_path):
+            sys_drive = drive
+            break
+    return path.join(ip, sys_drive)
