@@ -71,28 +71,19 @@ def registry(input, key, show_type=False):
     ------
     Returns the error from Reg.exe
     """
+    cmd = ["reg.exe", "query", input, "/v", key]
+    p = __exec_command__(cmd)
+    if p.returncode != 0:
+        raise RuntimeError("The following error propogated from Registry: {}"
+                           .format(p.stderr))
+    routput = p.stdout
 
-    cmd = u"reg.exe query \""+input+"\" /v \""+key+u"\" 2>&1"
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-    routput, err = p.communicate()
+    # This is an array that contains this
+    # ['HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session',
+    #   'Manager\\Environment', 'OS', 'REG_SZ', 'Windows_NT']
+    query = routput.rstrip().split()
 
-    # A WORKAROUND TILL AN UPSTREAM FIX IS MADE
-    # Expected: ERROR: The system was unable to find the specified registry
-    # key or value.
-    if routput[0:9] == b'\r\n\r\nERROR':
-        # TODO: CHECK IF OTHER ERRORS APPEAR IN TEST SUITE
-        query = routput.decode("utf-8", "unicode_escape")
+    if show_type:
+        return [query[4], query[3]]
     else:
-        # This is an array that contains this
-        # ['HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session',
-        #   'Manager\\Environment', 'OS', 'REG_SZ', 'Windows_NT']
-        query = routput.decode("utf-8", "unicode_escape").rstrip().split()
-
-    if type(query) == list:
-        if show_type:
-            return [query[4], query[3]]
-        else:
-            return query[4]  # Expected one
-    else:
-        raise RuntimeError(
-            "The following error propogated from Registry: " + query)
+        return query[4]  # Expected one
