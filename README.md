@@ -21,25 +21,6 @@ Microsoft Windows [Version 10.0.18219.1000]
 
 you can install from pypi using `pip install wslpy`, or install from source using `python3 setup.py install`
 
-## Documentation
-
-> `wslpy` is far from complete. this documentation page will change frequently.
-
-`wslpy` is a small library, it consist following functions and constants:
-
-```python
-wslpy.isWSL()
-wslpy.system.shellEnvVarList()
-wslpy.system.registry(input)
-wslpy.convert.to(input, toType=PathConvType.AUTO)
-wslpy.convert.toWin(input) 
-wslpy.convert.toWinDouble(input)
-wslpy.convert.toWSL(input) 
-wslpy.exec.cmd(command)
-wslpy.exec.pwSh(command)
-wslpy.exec.pwShCr(command)
-```
-
 ## License
 
 <img width="150" src="https://www.gnu.org/graphics/gplv3-with-text-136x68.png">
