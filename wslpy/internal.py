@@ -4,20 +4,19 @@ This is the class that helps with wslu;
 it is okay to use with other programs but it is not warranted
 """
 import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk
 
-def findIcon(icon):
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk  # noqa: E402
+
+
+def findIcon(icon_name):
     """
     Find icon from a input string.
 
     Returns
-    _______
+    -------
     A path to the icon file, an empty string if not found.
     """
-    return __findIcon__(icon)
-
-def __findIcon__(icon_name):
     icon_theme = Gtk.IconTheme.get_default()
     found_icon = ""
     for res in range(0, 512, 2):

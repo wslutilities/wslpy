@@ -1,6 +1,7 @@
 """ wslpy.convert
 
-This is the class that helps convert between 3 types of path used widely in WSL.
+This is the class that helps convert between
+3 types of path used widely in WSL.
 """
 import re
 from enum import Enum
@@ -79,7 +80,8 @@ def to(input, toType=PathConvType.AUTO):
             return __Win2Dwin__(__Lin2Win__(input))
         else:
             raise ValueError("ERROR: Invalid Conversion Type "+toType)
-    elif re.match(r'[A-Za-z]:\\\\', input) is not None:  # Windows Path /w Double Dashline
+    # Windows Path /w Double Dashline
+    elif re.match(r'[A-Za-z]:\\\\', input) is not None:
         if toType == PathConvType.AUTO:
             return __DWin2Lin__(input)
         elif toType == PathConvType.LINUX:

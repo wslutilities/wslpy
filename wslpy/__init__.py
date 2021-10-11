@@ -1,14 +1,6 @@
-import os.path
-import wslpy.convert
-import wslpy.exec
-import wslpy.system
+from wslpy.core.check import is_interop_enabled, is_wsl
 
-def isWSL():
-    """
-    Check whether the system is WSL.
-
-    Returns
-    -------
-    A boolean value, `True` if it is WSL.
-    """
-    return os.path.exists('/proc/sys/fs/binfmt_misc/WSLInterop')
+__all__ = [
+    "is_interop_enabled",
+    "is_wsl",
+]

@@ -13,7 +13,7 @@ setup(
     packages=['wslpy'],
     author='callmepk',
     author_email='wotingwu@live.com',
-    keywords=['system','WSL','Windows 10'],
+    keywords=['system', 'WSL', 'Windows 10'],
     url='https://github.com/wslutilities/wslpy',
     classifiers=[
         "Environment :: Console",
