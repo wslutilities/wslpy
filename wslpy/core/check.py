@@ -1,5 +1,7 @@
 from os import path, listdir
 
+from wslpy.core.access import distro_info
+
 
 def is_wsl():
     """
@@ -116,3 +118,28 @@ def get_sys_drive_prefix():
             sys_drive = drive
             break
     return path.join(ip, sys_drive)
+
+
+def wsl_version():
+    """
+    This function returns the version of WSL.
+
+    Returns
+    -------
+    The version of WSL.
+    """
+    if is_interop_enabled():
+        info = distro_info()
+        flag = int(info['Flags']['value'], 0)
+        if flag // 8 == 1:
+            return 2
+        else:
+            return 1
+    else:
+        import re
+        from platform import release
+        rel = release()
+        if re.match(r'^4\.\d\.\d-\d{5}-Microsoft', rel) is not None:
+            return 1
+        else:
+            return 2
