@@ -1,4 +1,4 @@
-from os import getcwd
+from os import getcwd, environ
 import subprocess
 
 
@@ -87,3 +87,49 @@ def registry(input, key, show_type=False):
         return [query[4], query[3]]
     else:
         return query[4]  # Expected one
+
+
+def distro_info(distro_name=None):
+    """
+    Returns the distro information as a string.
+
+    Returns
+    -------
+    The distro information as a dictionary.
+
+    Raises
+    ------
+    Returns the error from the command
+    """
+    if distro_name is None:
+        if environ.get("WSL_DISTRO_NAME"):
+            distro_name = environ.get("WSL_DISTRO_NAME")
+        else:
+            raise RuntimeError("WSL_DISTRO_NAME is not set")
+    p = __exec_command__(["reg.exe", "query",
+                          "HKCU\\SOFTWARE\\Microsoft\\"
+                          "Windows\\CurrentVersion\\Lxss",
+                          "/s", "/f", "DistributionName"])
+    if p.returncode != 0:
+        raise RuntimeError("failed to retrive distro information: {}"
+                           .format(p.stderr))
+    raw_data = p.stdout[2:]
+    raw_list = raw_data.split("\r\n\r\n")[:-1]
+    for raw_item in raw_list:
+        if raw_item.endswith(distro_name):
+            distro_loc = raw_item.split("\r\n")[0]
+            p2 = __exec_command__(["reg.exe", "query", distro_loc, "/s"])
+            if p2.returncode != 0:
+                raise RuntimeError("failed to retrive distro information: {}"
+                                   .format(p2.stderr))
+            import re
+            raw_distro_info = p2.stdout
+            # Clean output first to toutput
+            out = re.sub((r"\r\nHKEY_CURRENT_USER.*\r\n"), '', raw_distro_info)
+            # split toutput into list with aoutput
+            out_p = (re.split(r'\s\s+', out))[1:][:-1]
+            # convert aoutput to dictionary
+            output = {item: {'type': type, 'value': value}
+                      for item, type, value in zip(out_p[::3], out_p[1::3],
+                                                   out_p[2::3])}
+            return output
