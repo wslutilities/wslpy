@@ -3,9 +3,8 @@
 This is the execution class to execute commands
 from different windows executables
 """
-import subprocess
-
-from wslpy.core.check import is_interop_enabled, is_wsl
+from .core.check import is_interop_enabled, is_wsl
+from .core.access import __exec_command__
 
 
 def preCheckAssert():
@@ -14,7 +13,7 @@ def preCheckAssert():
                                   "/proc/sys/fs/binfmt_misc/WSLInterop'")
 
 
-def cmd(command):
+def cmd(command, working_dir=None):
     """
     Execute cmd command.
 
@@ -24,13 +23,14 @@ def cmd(command):
         string of `cmd.exe` commands.
     """
     preCheckAssert()
-    cmd = u"cmd.exe /c \""+command+u"\""
-    subprocess.call(cmd, shell=True)
+    cmd = ["cmd.exe", "/c", command]
+    p = __exec_command__(cmd, working_dir=working_dir)
+    return p
 
 
-def pwSh(command):
+def winps(command, working_dir=None):
     """
-    Execute PowerShell(5.*) command.
+    Execute Windows PowerShell(5.*) command.
 
     Parameter
     ---------
@@ -38,20 +38,7 @@ def pwSh(command):
         string of `powershell.exe` command.
     """
     preCheckAssert()
-    cmd = (u"powershell.exe -NoProfile "
-           u"-NonInteractive -Command \"{}\"").format(command)
-    subprocess.call(cmd, shell=True)
-
-
-def pwShCr(command):
-    """
-    Execute PowerShell Core command.
-
-    Parameter
-    ---------
-    command : str
-        string of `pwsh.exe` command.
-    """
-    preCheckAssert()
-    cmd = u"pwsh.exe -NoProfile -NonInteractive -Command \""+command+u"\""
-    subprocess.call(cmd, shell=True)
+    cmd = ["powershell.exe", "-NoProfile", "-NonInteractive", "-Command",
+           command]
+    p = __exec_command__(cmd, working_dir=working_dir)
+    return p
