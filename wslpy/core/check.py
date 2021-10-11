@@ -1,5 +1,4 @@
 from os import path
-import subprocess
 
 
 def is_wsl():
@@ -21,9 +20,11 @@ def is_interop_enabled():
     -------
     A boolean value, `True` if interoperablility is enabled.
     """
-    cat_wslInterop = subprocess.getoutput(
-        "cat /proc/sys/fs/binfmt_misc/WSLInterop | grep '.*abled'")
-    return cat_wslInterop == 'enabled'
+    if is_wsl():
+        with open('/proc/sys/fs/binfmt_misc/WSLInterop', 'r') as f:
+            interop_str = f.read()
+            value = interop_str.split('\n')[0]
+    return value == 'enabled'
 
 
 def __read_attribute__(file, attr):
