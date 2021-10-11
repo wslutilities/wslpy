@@ -31,8 +31,8 @@ class path_type(Enum):
 
 def __post_mount_prefix__():
     a = get_mount_prefix()
-    re.sub(r"^/", r"", a)
-    re.sub(r"/$", r"", a)
+    a = re.sub(r"^\/", r"", a)
+    a = re.sub(r"\/$", r"", a)
     return a
 
 
@@ -43,8 +43,10 @@ def __Lin2Win__(path, is_ns_modern=False):
     if re.match(r'^/{}'.format(MOUNT_PREFIX), path) is not None:
         # replace / to \
         path = re.sub(r'/', r'\\', path)
+        converted_mount = re.sub(r'/', r'\\', MOUNT_PREFIX)
         # replace \<mount_location>\<drive_letter> to <drive_letter>:
-        path = re.sub(r'\\{}\\([A-Za-z])'.format(MOUNT_PREFIX), r'\1:', path)
+        path = re.sub(r'\\{}\\([A-Za-z])'.format(converted_mount),
+                      r'\1:', path)
     else:
         from os import environ
         if not environ.get('WSL_DISTRO_NAME'):
@@ -54,7 +56,7 @@ def __Lin2Win__(path, is_ns_modern=False):
         path = re.sub(r'^/', r'', path)
         # replace / to \
         path = re.sub(r'/', r'\\', path)
-        # replace \<mount_location>\<drive_letter> to <drive_letter>:
+        # replace /<mount_location>/<drive_letter> to <drive_letter>:
         type_name = "wsl$"
         if is_ns_modern:
             type_name = "wsl.localhost"
@@ -72,7 +74,7 @@ def __Win2Dwin__(path):
 def __DWin2Lin__(path):
     # replace \\ to /
     path = re.sub(r'\\\\', r'/', path)
-    # replace <drive_letter>: to \<mount_location>\<drive_letter>
+    # replace <drive_letter>: to /<mount_location>/<drive_letter>
     path = re.sub(r'([A-Za-z]):', r'/{}/\1'.format(MOUNT_PREFIX), path)
     return path
 
