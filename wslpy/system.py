@@ -1,6 +1,7 @@
 import re
 from wslpy.core.access import __exec_command__
 from wslpy.exec import winps
+from wslpy.core.check import wsl_version, detect_distro
 
 
 def list_shellenv():
@@ -111,3 +112,13 @@ def get_sysenv(input):
             raise KeyError("Key does not exist.")
     except KeyError as err:
         print(err)
+
+
+__all__ = [
+    "list_shellenv",
+    "get_shellenv",
+    "list_sysenv",
+    "get_sysenv",
+    "wsl_version",
+    "detect_distro",
+    ]
