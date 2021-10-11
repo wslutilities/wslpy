@@ -1,8 +1,9 @@
 import re
-import subprocess
+from wslpy.core.access import __exec_command__
+from wslpy.exec import winps
 
 
-def shellEnvVarList():
+def list_shellenv():
     """
     List avaiable shell environment variables to use and
     its corresponding path.
@@ -11,14 +12,17 @@ def shellEnvVarList():
     -------
     A Dictionary of registry keys and its corresbonding values.
     """
-    cmd = (u"reg.exe query \"HKCU\\Software\\Microsoft\\Windows"
-           u"\\CurrentVersion\\Explorer\\User Shell Folders\" /s")
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-    routput, err = p.communicate()
+    cmd = ["reg.exe", "query", "HKCU\\Software\\Microsoft\\Windows"
+           "\\CurrentVersion\\Explorer\\User Shell Folders", "/s"]
+    p = __exec_command__(cmd)
+    if p.returncode != 0:
+        raise RuntimeError("Failed to get shell environment variables: ",
+                           p.stderr)
+    routput = p.stdout
     # Clean output first to toutput
     toutput = re.sub((r"\r\nHKEY_CURRENT_USER\\Software\\Microsoft\\"
                       r"Windows\\CurrentVersion\\Explorer\\User Shell"
-                      r" Folders\r\n"), '', routput.decode('utf-8'))
+                      r" Folders\r\n"), '', routput)
     toutput = re.sub(r'(REG_EXPAND_SZ|\r|\n)', '', toutput)
     toutput = re.sub(r'(REG_SZ|\r|\n)', '', toutput)
     # split toutput into list with aoutput
@@ -28,7 +32,7 @@ def shellEnvVarList():
     return output
 
 
-def shellEnvVar(input):
+def get_shellenv(input):
     """
     Get the value from shell environment variable.
 
@@ -48,7 +52,7 @@ def shellEnvVar(input):
         cannot be found in registry.
     """
     try:
-        shlList = shellEnvVarList()
+        shlList = list_shellenv()
         if input in shlList.keys():
             return shlList[input]
         else:
@@ -57,7 +61,7 @@ def shellEnvVar(input):
         print(err)
 
 
-def sysEnvVarList():
+def list_sysenv():
     """
     List avaiable system environment variables to use and
     its corresponding path.
@@ -67,18 +71,20 @@ def sysEnvVarList():
     A Dictionary of system environement variables keys and its corresbonding
     values.
     """
-    cmd = u"powershell.exe \"Get-ChildItem env:\""
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-    routput, err = p.communicate()
+    p = winps("Get-ChildItem env:")
+    if p.returncode != 0:
+        raise RuntimeError("Failed to get system environment variables: ",
+                           p.stderr)
+    routput = p.stdout
     toutput = re.sub(r'(Name|Value|----|-|-----|\r|\n)',
-                     '', routput.decode('utf-8'))
+                     '', routput)
     aoutput = (re.split(r'\s\s+', toutput))[1:]
     # convert aoutput to dictionary
     output = dict(zip(aoutput[::2], aoutput[1::2]))
     return output
 
 
-def sysEnvVar(input):
+def get_sysenv(input):
     """
     Get the value from shell environment variable.
 
@@ -98,7 +104,7 @@ def sysEnvVar(input):
         cannot be found in registry.
     """
     try:
-        sysVarList = sysEnvVarList()
+        sysVarList = list_sysenv()
         if input in sysVarList.keys():
             return sysVarList[input]
         else:
