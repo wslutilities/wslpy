@@ -61,9 +61,21 @@ public class DPI {
 
     p = winps(command)
     if p.returncode:
-        raise Exception("Failed to get display scaling")
+        raise Exception("Failed to get display scaling: ", p.stderr)
     dscale = int(p.stdout.rstrip()) / 100
     return dscale
+
+
+def get_windows_locale():
+    """
+    Get Windows Locale
+    """
+    p = winps("(Get-Culture).Name")
+    if p.returncode:
+        raise Exception("Failed to get Windows Locale: ", p.stderr)
+    win_locale = p.stdout.rstrip().replace("-", "_")
+    return win_locale
+
 
 
 __all__ = [
