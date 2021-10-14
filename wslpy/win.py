@@ -125,3 +125,16 @@ def get_windows_install_date(friendly_output=False):
         return f_time
     else:
         return dec_time
+
+
+def get_windows_branch():
+    """
+    Get the current Windows branch
+
+    Returns
+    -------
+    a string of Windows Branch
+    """
+    raw_branch = registry("HKLM\\Software\\Microsoft"
+                          "\\Windows NT\\CurrentVersion", "BuildBranch")
+    return raw_branch
