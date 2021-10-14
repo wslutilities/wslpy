@@ -138,3 +138,27 @@ def get_windows_branch():
     raw_branch = registry("HKLM\\Software\\Microsoft"
                           "\\Windows NT\\CurrentVersion", "BuildBranch")
     return raw_branch
+
+
+def get_windows_build(is_full_build=False):
+    """
+    Get Windows build information
+
+    Parameters
+    ----------
+    is_full_vuild: bool
+        if it should print full build, `False` by default
+
+    Returns
+    -------
+    a string of windows build
+    """
+    if is_full_build:
+        raw_build = registry("HKLM\\Software\\Microsoft"
+                             "\\Windows NT\\CurrentVersion",
+                             "BuildLabEx")
+    else:
+        raw_build = registry("HKLM\\Software\\Microsoft"
+                             "\\Windows NT\\CurrentVersion",
+                             "CurrentBuild")
+    return raw_build
