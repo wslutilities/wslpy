@@ -77,6 +77,18 @@ def get_windows_locale():
     return win_locale
 
 
+def get_windows_theme():
+    """
+    Get Windows Theme
+
+    Returns
+    -------
+    a string of either "light" or "dark"
+    """
+    raw_theme = registry("HKCU\\SOFTWARE\\Microsoft\\Windows\\Current"
+                         "Version\\Themes\\Personalize", "AppsUseLightTheme")
+    return "dark" if int(raw_theme, 0) else "light"
+
 
 __all__ = [
     "get_current_execuable",
