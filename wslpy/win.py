@@ -1,11 +1,14 @@
-from wslpy.core.check import get_mount_prefix, get_sys_drive_prefix
 from wslpy.core.access import distro_info, registry
 from wslpy.exec import winps
 
 
-def get_current_execuable():
+def get_current_executable():
     """
-    Get current exes of the current WSL (for ones that have).
+    Get current exes of the current WSL (for ones that have)
+
+    Returns
+    -------
+    A string of the executables
     """
     import os
     from wslpy.convert import to_wsl
@@ -28,6 +31,10 @@ def get_current_execuable():
 def get_display_scaling():
     """
     Get Windows Display Scaling
+
+    Returns
+    -------
+    A number of the current display scaling
     """
     command = """
 Add-Type @'
@@ -69,6 +76,10 @@ public class DPI {
 def get_windows_locale():
     """
     Get Windows Locale
+
+    Returns
+    -------
+    a string of Windows Locale
     """
     p = winps("(Get-Culture).Name")
     if p.returncode:
@@ -88,11 +99,3 @@ def get_windows_theme():
     raw_theme = registry("HKCU\\SOFTWARE\\Microsoft\\Windows\\Current"
                          "Version\\Themes\\Personalize", "AppsUseLightTheme")
     return "dark" if int(raw_theme, 0) else "light"
-
-
-__all__ = [
-    "get_current_execuable",
-    "get_mount_prefix",
-    "get_sys_drive_prefix",
-    "registry",
-    ]
