@@ -35,19 +35,10 @@ def __exec_command__(cmd, *, working_dir=None):
         return cp
 
 
-def registry(input, key, show_type=False):
+def registry(input, key):
     """
     Given a valid registry path, retrieves the value of an entry in the
-    registry, and type if requested.
-    Eg: registry("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control
-              \\Session Manager\\Environment","OS") returns "WINDOWS_NT"
-
-    A valid registry path typically looks like:
-        "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\
-            Session Manager\\Environment" (for system)
-        "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\
-            User Shell Folders" (for shell)
-        (Although any valid entries should work too)
+    registry.
 
     Parameters
     ----------
@@ -57,15 +48,9 @@ def registry(input, key, show_type=False):
     key : str
         the name of the registry's key in string
 
-    show_type : bool
-        if show_type = True, registry() will also return the type of variable
-        used. show_type is False otherwise
-        and by default
-
     Returns
     -------
-    The corresponding value as a string, an array in the form [value,type]
-    otherwise
+    The corresponding value as a string
 
     Raises
     ------
@@ -76,17 +61,14 @@ def registry(input, key, show_type=False):
     if p.returncode != 0:
         raise RuntimeError("The following error propogated from Registry: {}"
                            .format(p.stderr))
-    routput = p.stdout
 
-    # This is an array that contains this
-    # ['HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session',
-    #   'Manager\\Environment', 'OS', 'REG_SZ', 'Windows_NT']
-    query = routput.rstrip().split()
-
-    if show_type:
-        return query[3], query[2]
-    else:
-        return query[3]  # Expected one
+    query = p.stdout.rstrip()
+    import re
+    query = re.sub(r"^\r\n.+\r\n", "", query).lstrip()
+    query = re.sub(key, "", query).lstrip()
+    query = re.sub(r"REG_(SZ|MULTI_SZ|EXPAND_SZ|DWORD|BINARY|NONE)",
+                   "", query).lstrip()
+    return query
 
 
 def distro_info(distro_name=None):
