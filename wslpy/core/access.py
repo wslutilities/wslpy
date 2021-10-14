@@ -84,9 +84,9 @@ def registry(input, key, show_type=False):
     query = routput.rstrip().split()
 
     if show_type:
-        return [query[4], query[3]]
+        return query[3], query[2]
     else:
-        return query[4]  # Expected one
+        return query[3]  # Expected one
 
 
 def distro_info(distro_name=None):
