@@ -99,3 +99,29 @@ def get_windows_theme():
     raw_theme = registry("HKCU\\SOFTWARE\\Microsoft\\Windows\\Current"
                          "Version\\Themes\\Personalize", "AppsUseLightTheme")
     return "dark" if int(raw_theme, 0) else "light"
+
+
+def get_windows_install_date(friendly_output=False):
+    """
+    Get the install date of the current installed build of Windows
+
+    Parameters
+    ----------
+    friendly_output: bool
+        whether the value returned is readable or not, `false` by default
+
+    Returns
+    -------
+    A integer of unix timestamp or a string of readable time
+    """
+    raw_time = registry("HKLM\\Software\\Microsoft"
+                        "\\Windows NT\\CurrentVersion", "InstallDate")
+    dec_time = int(raw_time, 0)
+
+    if friendly_output:
+        from datetime import datetime
+        f_time = \
+            datetime.utcfromtimestamp(dec_time).strftime('%Y-%m-%d %H:%M:%S')
+        return f_time
+    else:
+        return dec_time
