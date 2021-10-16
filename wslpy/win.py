@@ -162,3 +162,22 @@ def get_windows_build(is_full_build=False):
                              "\\Windows NT\\CurrentVersion",
                              "CurrentBuild")
     return raw_build
+
+
+def get_windows_uptime():
+    """
+    Get the current up time in Windows
+
+    Returns
+    -------
+    a array in the format of [days, hours, minutes]
+    """
+    p = winps("[int64]((get-date) - (gcim Win32_Operating"
+              "System).LastBootUpTime).TotalSeconds")
+    if p.returncode:
+        return -1
+    raw_time = int(p.stdout.rstrip())
+    raw_days = raw_time // 86400
+    raw_hours = raw_time // 3600 % 24
+    raw_minutes = raw_time // 60 % 60
+    return [raw_days, raw_hours, raw_minutes]
