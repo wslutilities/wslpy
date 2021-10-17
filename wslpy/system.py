@@ -114,6 +114,18 @@ def get_sysenv(input):
         print(err)
 
 
+def get_ip():
+    """
+    Get the current IPv4 address from your WSL2 instance
+
+    Returns
+    -------
+    A string of IPv4 address
+    """
+    import netifaces as ni
+    return ni.ifaddresses("eth0")[ni.AF_INET][0]['addr']
+
+
 __all__ = [
     "list_shellenv",
     "get_shellenv",
