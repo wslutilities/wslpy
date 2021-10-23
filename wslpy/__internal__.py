@@ -1,5 +1,4 @@
-""" wslpy.internal
-
+"""
 This is the class that helps with wslu;
 it is okay to use with other programs but it is not warranted
 """
