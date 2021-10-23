@@ -1,3 +1,7 @@
+"""
+This provides a pre-configured set of tools to use
+directly in WSL.
+"""
 import os
 import re
 import logging

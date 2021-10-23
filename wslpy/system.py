@@ -1,3 +1,7 @@
+"""
+Provides users with the access for Windows system
+information like system vatiables and registry keys.
+"""
 import re
 from wslpy.core.access import __exec_command__
 from wslpy.exec import winps

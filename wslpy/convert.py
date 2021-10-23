@@ -1,5 +1,4 @@
-""" wslpy.convert
-
+"""
 This is the class that helps convert between
 3 types of path used widely in WSL.
 """

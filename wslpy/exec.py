@@ -1,5 +1,4 @@
-"""wslpy.exec
-
+"""
 This is the execution class to execute commands
 from different windows executables
 """
