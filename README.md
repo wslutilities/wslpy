@@ -8,7 +8,7 @@ This is a Python3 library for WSL specific tasks, and you can use it to do somet
 
 ```python
 >>> import wslpy as wp
->>> wp.isWSL()
+>>> wp.is_wsl()
 True
 >>> wp.exec.cmd('ver')
 Microsoft Windows [Version 10.0.18219.1000]

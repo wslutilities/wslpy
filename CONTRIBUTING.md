@@ -15,13 +15,15 @@ You can use the following as the IDE:
 
 ## Setup environment
 
-- install `make` from your system and `flake8` from your pip.
+- install `make` from your system and `flake8` and `pdoc` from your pip.
 
-## General guidelines
+## Formatting
 
 - Please use **four spaces** for indentation;
 - Use `"""` for function commenting;
-- se `#` for general commenting;
+- se `#` for general commenting.
+
+## Modules to use
 - Use `flake8` for linting (`make lint` to lint);
 - Use `nose` for testing;
 - Use `coverage` for code coverage.
