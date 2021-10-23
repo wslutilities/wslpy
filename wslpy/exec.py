@@ -3,11 +3,11 @@ This is the execution class to execute commands
 from different windows executables
 """
 from os import path
-from .core.check import get_sys_drive_prefix, is_interop_enabled, is_wsl
-from .core.access import __exec_command__
+from .__core__.check import get_sys_drive_prefix, is_interop_enabled, is_wsl
+from .__core__.access import __exec_command__
 
 
-def preCheckAssert():
+def __precheck__():
     assert is_wsl(), "This is not a wsl distribution"
     assert is_interop_enabled(), ("Please enable interop /n Use 'echo 1 > "
                                   "/proc/sys/fs/binfmt_misc/WSLInterop'")
@@ -28,7 +28,7 @@ def cmd(command, working_dir=None):
     -------
     return a CompletedProcess object.
     """
-    preCheckAssert()
+    __precheck__()
     sysdrv_prefix = get_sys_drive_prefix()
     pt = path.join(sysdrv_prefix, "Windows", "System32", "cmd.exe")
     cmd = [pt, "/c", command]
@@ -51,7 +51,7 @@ def winps(command, working_dir=None):
     -------
     return a CompletedProcess object.
     """
-    preCheckAssert()
+    __precheck__()
     sysdrv_prefix = get_sys_drive_prefix()
     pt = path.join(sysdrv_prefix, "Windows", "System32",
                    "WindowsPowerShell", "v1.0", "powershell.exe")

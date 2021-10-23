@@ -1,6 +1,6 @@
 from os import path, listdir
 
-from wslpy.core.access import distro_info
+from .access import distro_info
 
 
 def is_wsl():

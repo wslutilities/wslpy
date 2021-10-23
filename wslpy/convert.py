@@ -4,7 +4,7 @@ This is the class that helps convert between
 """
 import re
 from enum import Enum
-from .core.check import get_mount_prefix
+from .__core__.check import get_mount_prefix
 
 
 class path_type(Enum):

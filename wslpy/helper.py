@@ -7,8 +7,8 @@ import re
 import logging
 
 from .exec import winps
-from .core.check import get_mount_prefix, get_sys_drive_prefix
-from .core.access import __exec_command__
+from .__core__.check import get_mount_prefix, get_sys_drive_prefix
+from .__core__.access import __exec_command__
 
 
 def automount_drive(option=None, logging_level=logging.INFO):

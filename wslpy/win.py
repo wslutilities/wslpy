@@ -1,7 +1,7 @@
 """
 Provides easy access to the Windows information
 """
-from wslpy.core.access import distro_info, registry
+from .__core__.access import distro_info, registry
 from wslpy.exec import winps
 
 

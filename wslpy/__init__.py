@@ -29,7 +29,7 @@ you can install from pypi using `pip install wslpy`,
 This project uses [GPLv3](LICENSE) License.
 
 """
-from .core.check import is_interop_enabled, is_wsl
+from .__core__.check import is_interop_enabled, is_wsl
 
 __all__ = [
     "is_interop_enabled",
