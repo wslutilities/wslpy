@@ -137,4 +137,5 @@ __all__ = [
     "get_sysenv",
     "wsl_version",
     "detect_distro",
+    "get_ip",
     ]
