@@ -2,6 +2,7 @@ import os
 import re
 import logging
 
+from .exec import winps
 from .core.check import get_mount_prefix, get_sys_drive_prefix
 from .core.access import __exec_command__
 
@@ -92,3 +93,19 @@ def automount_drive(option=None, logging_level=logging.INFO):
                     if mount_p.returncode:
                         logging.debug("failed to mount but still continue")
                         continue
+
+
+def time_reset():
+    """
+    This will reset your WSL2 time to the correct Windows time.
+    requires root access.
+    """
+    from datetime import datetime
+    command = 'Get-Date -UFormat "%m/%d/%Y %T %Z"'
+    p = winps(command)
+    if p.returncode:
+        raise Exception("failed to get time from Windows")
+    time = p.stdout.rstrip()
+    sp = __exec_command__(["date", "-s", time])
+    if sp.returncode:
+        raise Exception("failed to set time")
