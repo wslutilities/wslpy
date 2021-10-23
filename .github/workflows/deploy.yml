@@ -1,0 +1,24 @@
+name: CD
+on: [push]
+jobs:
+  build:
+    name: Generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup & Build
+        run: |
+          pip3 install pdoc3
+          pdoc3 --html wslpy/
+      - name: Deploy
+        env:
+          GH_TOKEN: ${{ secrets.GIT_DEPLOY_KEY }}
+        run: |
+          git config --global user.email "me@patrickwu.space"
+          git config --global user.name "Jinming Wu, Patrick"
+          git clone --depth 1 https://patrick330602:$GH_TOKEN@github.com/wslutilities/website.git website
+          mkdir -p ./website/wslpy
+          cp -rf ./html/wslpy/* ./website/wslpy/
+          git --git-dir=./website/.git --work-tree=./website add -A
+          git --git-dir=./website/.git --work-tree=./website commit -m "wslpy Wiki update at $(date)"
+          git --git-dir=./website/.git --work-tree=./website push
