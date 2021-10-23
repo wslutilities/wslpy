@@ -5,12 +5,13 @@ with open("README.md", "r") as fh:
 
 setup(
     name='wslpy',
-    version='0.0.12',
+    version='0.0.13',
     description='Python Library for WSL specific tasks',
     long_description=long_description,
     long_description_content_type="text/markdown",
     license='GPLv3',
     packages=['wslpy'],
+    install_requires=['netifaces'],
     author='Patrick Wu',
     author_email='me@patrickwu.space',
     keywords=['system', 'WSL', 'Windows 10', 'Windows 11'],
