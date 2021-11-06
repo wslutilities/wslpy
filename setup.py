@@ -10,7 +10,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license='GPLv3',
-    packages=['wslpy'],
+    packages=['wslpy','wslpy/__core__'],
     install_requires=['netifaces'],
     author='Patrick Wu',
     author_email='me@patrickwu.space',
