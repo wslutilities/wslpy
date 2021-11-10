@@ -1,5 +1,8 @@
 name: CD
-on: [push]
+on:
+  push:
+    branches:
+      - master
 jobs:
   build:
     name: Generate
@@ -20,5 +23,5 @@ jobs:
           mkdir -p ./website/wslpy
           cp -rf ./html/wslpy/* ./website/wslpy/
           git --git-dir=./website/.git --work-tree=./website add -A
-          git --git-dir=./website/.git --work-tree=./website commit -m "wslpy Wiki update at $(date)"
+          git --git-dir=./website/.git --work-tree=./website commit -m "wslpy Wiki update at $(date)" || exit 0
           git --git-dir=./website/.git --work-tree=./website push
