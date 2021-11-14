@@ -16,12 +16,14 @@ jobs:
       - name: Deploy
         env:
           GH_TOKEN: ${{ secrets.GIT_DEPLOY_KEY }}
+        shell: bash
         run: |
           git config --global user.email "me@patrickwu.space"
           git config --global user.name "Jinming Wu, Patrick"
           git clone --depth 1 https://patrick330602:$GH_TOKEN@github.com/wslutilities/website.git website
-          mkdir -p ./website/wslpy
-          cp -rf ./html/wslpy/* ./website/wslpy/
+          mkdir -p ./website/wslpy/
+          if [ ! -d "./website/wslpy/$(python3 setup.py --version)" ] ; then mkdir ./website/wslpy/$(python3 setup.py --version); rm -f ./website/wslpy/current; ln -s ./$(python3 setup.py --version) ./website/wslpy/current; fi
+          cp -rf ./html/wslpy/* ./website/wslpy/$(python3 setup.py --version)
           git --git-dir=./website/.git --work-tree=./website add -A
           git --git-dir=./website/.git --work-tree=./website commit -m "wslpy Wiki update at $(date)" || exit 0
           git --git-dir=./website/.git --work-tree=./website push
