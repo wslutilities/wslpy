@@ -8,7 +8,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk  # noqa: E402
 
 
-def findIcon(icon_name):
+def find_icon(icon_name):
     """
     Find icon from a input string.
 

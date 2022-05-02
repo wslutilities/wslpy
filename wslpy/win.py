@@ -149,7 +149,7 @@ def get_windows_build(is_full_build=False):
 
     Parameters
     ----------
-    is_full_vuild: bool
+    is_full_build: bool
         if it should print full build, `False` by default
 
     Returns
@@ -169,7 +169,7 @@ def get_windows_build(is_full_build=False):
 
 def get_windows_uptime():
     """
-    Get the current up time in Windows
+    Get the current uptime in Windows
 
     Returns
     -------
@@ -184,6 +184,7 @@ def get_windows_uptime():
     raw_hours = raw_time // 3600 % 24
     raw_minutes = raw_time // 60 % 60
     return [raw_days, raw_hours, raw_minutes]
+
 
 __all__ = ["get_current_executable", "get_display_scaling",
            "get_windows_locale", "get_windows_theme",

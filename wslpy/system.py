@@ -57,9 +57,9 @@ def get_shellenv(input):
         cannot be found in registry.
     """
     try:
-        shlList = list_shellenv()
-        if input in shlList.keys():
-            return shlList[input]
+        shl_list = list_shellenv()
+        if input in shl_list.keys():
+            return shl_list[input]
         else:
             raise KeyError("Key does not exist.")
     except KeyError as err:
@@ -68,12 +68,12 @@ def get_shellenv(input):
 
 def list_sysenv():
     """
-    List avaiable system environment variables to use and
+    List available system environment variables to use and
     its corresponding path.
 
     Returns
     -------
-    A Dictionary of system environement variables keys and its corresbonding
+    A Dictionary of system environment variables keys and its corresponding
     values.
     """
     p = winps("Get-ChildItem env:")
@@ -109,9 +109,9 @@ def get_sysenv(input):
         cannot be found in registry.
     """
     try:
-        sysVarList = list_sysenv()
-        if input in sysVarList.keys():
-            return sysVarList[input]
+        sys_var_list = list_sysenv()
+        if input in sys_var_list.keys():
+            return sys_var_list[input]
         else:
             raise KeyError("Key does not exist.")
     except KeyError as err:

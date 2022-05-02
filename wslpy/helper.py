@@ -55,7 +55,7 @@ def automount_drive(option=None, logging_level=logging.INFO):
             logging.debug("got wsl.conf option: {}".format(option))
 
     if option is not None:
-        # from subiquity.ayatem_setup.ui.views.wslconfbase
+        # from subiquity.system_setup.ui.views.wslconfbase
         # code written by me under AGPLv3 License
         # filesystem independent mount option
         fsimo = [r"async", r"(no)?atime", r"(no)?auto",
@@ -104,7 +104,6 @@ def time_reset():
     This will reset your WSL2 time to the correct Windows time.
     requires root access.
     """
-    from datetime import datetime
     command = 'Get-Date -UFormat "%m/%d/%Y %T %Z"'
     p = winps(command)
     if p.returncode:

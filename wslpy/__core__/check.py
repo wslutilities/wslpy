@@ -16,13 +16,20 @@ def is_wsl():
 
 def is_interop_enabled():
     """
-    Checks if interoperablility is enabled.
+    Checks if interoperability is enabled.
 
     Returns
     -------
-    A boolean value, `True` if interoperablility is enabled.
+    A boolean value, `True` if interoperability is enabled.
     """
     if is_wsl():
+        if path.exists("/etc/wsl.conf"):
+            from configparser import ConfigParser
+            c = ConfigParser()
+            c.read("/etc/wsl.conf")
+            if c.has_option('interop', 'enabled'):
+                value = c['interop']['enabled']
+                return value.lower() == 'true'
         with open('/proc/sys/fs/binfmt_misc/WSLInterop', 'r') as f:
             interop_str = f.read()
             value = interop_str.split('\n')[0]
@@ -54,7 +61,7 @@ def __read_attribute__(file, attr):
 def detect_distro():
     """
     Reads the /etc/os-release file nad tries to infer
-    the the OS form available attributes.
+    the OS form available attributes.
 
     Returns
     -------
@@ -80,7 +87,7 @@ def detect_distro():
 
 def get_mount_prefix():
     """
-    This function returns the prefix for the current windows mount locaution,
+    This function returns the prefix for the current windows mount location,
     aka the Interop Prefix.
 
     Returns

@@ -59,7 +59,7 @@ def registry(input, key):
     cmd = ["reg.exe", "query", input, "/v", key]
     p = __exec_command__(cmd)
     if p.returncode != 0:
-        raise RuntimeError("The following error propogated from Registry: {}"
+        raise RuntimeError("The following error propagated from Registry: {}"
                            .format(p.stderr))
 
     query = p.stdout.rstrip()
@@ -102,7 +102,7 @@ def distro_info(distro_name=None):
             distro_loc = raw_item.split("\r\n")[0]
             p2 = __exec_command__(["reg.exe", "query", distro_loc, "/s"])
             if p2.returncode != 0:
-                raise RuntimeError("failed to retrive distro information: {}"
+                raise RuntimeError("failed to retrieve distro information: {}"
                                    .format(p2.stderr))
             import re
             raw_distro_info = p2.stdout

@@ -7,7 +7,7 @@ from enum import Enum
 from .__core__.check import get_mount_prefix
 
 
-class path_type(Enum):
+class PathType(Enum):
     """Types for Path Conversions
 
     `AUTO`
@@ -19,13 +19,13 @@ class path_type(Enum):
     `WIN`
     Convert to Windows Path
 
-    `WINDOUBLE`
+    `WIN_DOUBLE`
     Convert to Windows Path with Double Dash
     """
     AUTO = 0
     LINUX = 1
     WIN = 2
-    WINDOUBLE = 3
+    WIN_DOUBLE = 3
 
 
 def __post_mount_prefix__():
@@ -38,7 +38,7 @@ def __post_mount_prefix__():
 MOUNT_PREFIX = __post_mount_prefix__()
 
 
-def __Lin2Win__(path, is_ns_modern=False):
+def __lin2win__(path, is_ns_modern=False):
     if re.match(r'^/{}'.format(MOUNT_PREFIX), path) is not None:
         # replace / to \
         path = re.sub(r'/', r'\\', path)
@@ -65,12 +65,12 @@ def __Lin2Win__(path, is_ns_modern=False):
     return path
 
 
-def __Win2Dwin__(path):
+def __win2dwin__(path):
     # replace \ to \\
     return re.sub(r'\\', r'\\\\', path)
 
 
-def __DWin2Lin__(path):
+def __dwin2lin__(path):
     # replace \\ to /
     path = re.sub(r'\\\\', r'/', path)
     # replace <drive_letter>: to /<mount_location>/<drive_letter>
@@ -78,7 +78,7 @@ def __DWin2Lin__(path):
     return path
 
 
-def to(input, to_type=path_type.AUTO, is_ns_modern=False):
+def to(input, to_type=PathType.AUTO, is_ns_modern=False):
     """
     Convert between 3 types of path used widely in WSL.
 
@@ -86,8 +86,8 @@ def to(input, to_type=path_type.AUTO, is_ns_modern=False):
     ----------
     input : str
         the string of the original path.
-    to_type : path_type
-        the type user wants to convert to. Default is path_type.AUTO.
+    to_type : PathType
+        the type user wants to convert to. Default is PathType.AUTO.
     is_ns_modern : bool
         if the linux path needs to convert to new style(``wsl.localhost``).
         Default is False (``wsl$``).
@@ -101,23 +101,23 @@ def to(input, to_type=path_type.AUTO, is_ns_modern=False):
     ValueError
         An error occurred when the input is invalid.
     """
-    # Windows Path /w Double Dashline
+    # Windows Path /w Double Dash-line
     if re.match(r'^[A-Za-z]:\\\\', input) is not None:
-        if to_type in (path_type.AUTO, path_type.LINUX):
-            return __DWin2Lin__(input)
-        elif to_type == path_type.WIN:
-            return __Lin2Win__(__DWin2Lin__(input), is_ns_modern)
-        elif to_type == path_type.WINDOUBLE:
+        if to_type in (PathType.AUTO, PathType.LINUX):
+            return __dwin2lin__(input)
+        elif to_type == PathType.WIN:
+            return __lin2win__(__dwin2lin__(input), is_ns_modern)
+        elif to_type == PathType.WIN_DOUBLE:
             return input
         else:
             raise ValueError("ERROR: Invalid Conversion Type "+to_type)
     elif re.match(r'^[A-Za-z]:', input) is not None:  # Windows Path
-        if to_type in (path_type.AUTO, path_type.LINUX):
-            return __DWin2Lin__(__Win2Dwin__(input))
-        elif to_type == path_type.WIN:
+        if to_type in (PathType.AUTO, PathType.LINUX):
+            return __dwin2lin__(__win2dwin__(input))
+        elif to_type == PathType.WIN:
             return input
-        elif to_type == path_type.WINDOUBLE:
-            return __Win2Dwin__(input)
+        elif to_type == PathType.WIN_DOUBLE:
+            return __win2dwin__(input)
         else:
             raise ValueError("ERROR: Invalid Conversion Type "+to_type)
     elif re.match(r'^\\\\wsl', input) is not None:  # WSL Windows Path
@@ -127,22 +127,22 @@ def to(input, to_type=path_type.AUTO, is_ns_modern=False):
         input = re.sub(r'^\\\\(wsl|wsl\$|wsl\.localhost)\\[^\\]*\\',
                        r'\\', input)
         input = re.sub(r'\\', r'/', input)
-        if to_type in (path_type.AUTO, path_type.LINUX):
+        if to_type in (PathType.AUTO, PathType.LINUX):
             return input
-        elif to_type == path_type.WIN:
-            return __Lin2Win__(input, is_ns_modern)
-        elif to_type == path_type.WINDOUBLE:
-            return __Win2Dwin__(__Lin2Win__(input, is_ns_modern))
+        elif to_type == PathType.WIN:
+            return __lin2win__(input, is_ns_modern)
+        elif to_type == PathType.WIN_DOUBLE:
+            return __win2dwin__(__lin2win__(input, is_ns_modern))
         else:
             raise ValueError("ERROR: Invalid Conversion Type "+to_type)
     # Linux Path
     else:
-        if to_type in (path_type.AUTO, path_type.WIN):
-            return __Lin2Win__(input)
-        elif to_type == path_type.LINUX:
+        if to_type in (PathType.AUTO, PathType.WIN):
+            return __lin2win__(input)
+        elif to_type == PathType.LINUX:
             return input
-        elif to_type == path_type.WINDOUBLE:
-            return __Win2Dwin__(__Lin2Win__(input, is_ns_modern))
+        elif to_type == PathType.WIN_DOUBLE:
+            return __win2dwin__(__lin2win__(input, is_ns_modern))
         else:
             raise ValueError("ERROR: Invalid Conversion Type "+to_type)
 
@@ -165,7 +165,7 @@ def to_win(input):
     ValueError
         An error occurred when the input is invalid.
     """
-    return to(input, path_type.WIN)
+    return to(input, PathType.WIN)
 
 
 def to_win_double(input):
@@ -186,7 +186,7 @@ def to_win_double(input):
     ValueError
         An error occurred when the input is invalid.
     """
-    return to(input, path_type.WINDOUBLE)
+    return to(input, PathType.WIN_DOUBLE)
 
 
 def to_wsl(input):
@@ -207,4 +207,4 @@ def to_wsl(input):
     ValueError
         An error occurred when the input is invalid.
     """
-    return to(input, path_type.LINUX)
+    return to(input, PathType.LINUX)
