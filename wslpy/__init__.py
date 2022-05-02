@@ -1,5 +1,5 @@
 """
-## Documentation for Ver. 0.0.14
+## Documentation for Ver. 0.1.0
 
 > `wslpy` is far from complete. the API will change frequently.
 
