@@ -31,6 +31,9 @@ This project uses [GPLv3](LICENSE) License.
 """
 from .__core__.check import is_interop_enabled, is_wsl
 
+__pdoc__ = {}
+__pdoc__["tests"] = False
+
 __all__ = [
     "is_interop_enabled",
     "is_wsl",
