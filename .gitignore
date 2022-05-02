@@ -5,3 +5,6 @@ dist
 *.egg-info
 .vscode
 .idea
+.coverage
+htmlcov
+.DS_Store
