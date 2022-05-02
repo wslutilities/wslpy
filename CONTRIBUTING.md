@@ -16,7 +16,7 @@ You can use the following as the IDE:
 ## Setup environment
 
 - installl `gi` using the following guide: <https://pygobject.readthedocs.io/en/latest/getting_started.html>.
-- install `make` from your system and `flake8` and `pdoc` from your pip.
+- install `make` from your system and `flake8`, `pdoc`, `nose` and `coverage` from your pip.
 
 ## Formatting
 
@@ -26,5 +26,4 @@ You can use the following as the IDE:
 
 ## Modules to use
 - Use `flake8` for linting (`make lint` to lint);
-- Use `nose` for testing;
-- Use `coverage` for code coverage.
+- Use `nose` for testing and `coverage` for code coverage (`make test` to test and generate code test coverage).
