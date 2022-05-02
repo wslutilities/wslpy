@@ -15,6 +15,7 @@ You can use the following as the IDE:
 
 ## Setup environment
 
+- installl `gi` using the following guide: <https://pygobject.readthedocs.io/en/latest/getting_started.html>.
 - install `make` from your system and `flake8` and `pdoc` from your pip.
 
 ## Formatting
